@@ -10,6 +10,19 @@ from rclpy.node import Node
 from rclpy.qos import QoSProfile
 
 
+def similar_pose(pose1: Pose, pose2: Pose, position_threshold=0.01, orientation_threshold=0.01):
+    """Check if two poses are similar within a certain threshold."""
+    position_close = all(
+        abs(getattr(pose1.position, attr) - getattr(pose2.position, attr)) < position_threshold
+        for attr in ['x', 'y', 'z']
+    )
+    orientation_close = all(
+        abs(getattr(pose1.orientation, attr) - getattr(pose2.orientation, attr)) < orientation_threshold
+        for attr in ['x', 'y', 'z', 'w']
+    )
+    return position_close and orientation_close
+
+
 class MoveItFollowTarget(Node):
     def __init__(self):
         super().__init__("sim_follow")
@@ -49,9 +62,10 @@ class MoveItFollowTarget(Node):
         """
 
         # Return if target pose is unchanged
-        if msg.pose == self.__previous_target_pose:
+        if similar_pose(msg.pose, self.__previous_target_pose):
             return
 
+        self.get_logger().info(f"Received new target pose: {msg.pose}")
         self.get_logger().info("Target pose has changed. Planning and executing...")
 
         # Plan and execute motion
@@ -69,7 +83,8 @@ def main(args=None):
 
     target_follower = MoveItFollowTarget()
 
-    executor = rclpy.executors.MultiThreadedExecutor(2)
+    # executor = rclpy.executors.MultiThreadedExecutor(2)
+    executor = rclpy.executors.SingleThreadedExecutor()
     executor.add_node(target_follower)
     executor.spin()
 

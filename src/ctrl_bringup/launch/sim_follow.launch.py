@@ -177,13 +177,13 @@ def generate_launch_description() -> LaunchDescription:
                         parameters=[{"use_sim_time": use_sim_time}],
                         remappings=[("/model/target/pose", "/target_pose")],
                     ),
-                    Node(
-                        package="sim_ctrl",
-                        executable="sim_follow",
-                        output="log",
-                        arguments=["--ros-args", "--log-level", log_level],
-                        parameters=[{"use_sim_time": use_sim_time}],
-                    ),
+                    # Node(
+                    #     package="sim_ctrl",
+                    #     executable="sim_follow",
+                    #     output="log",
+                    #     arguments=["--ros-args", "--log-level", log_level],
+                    #     parameters=[{"use_sim_time": use_sim_time}],
+                    # ),
                 ],
             )
         ),

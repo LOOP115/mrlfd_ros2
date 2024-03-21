@@ -34,4 +34,5 @@ source install/setup.bash
 ```bash
 # Follow a target inside Ignition Gazebo
 ros2 launch ctrl_bringup sim_follow.launch.py
+ros2 run sim_ctrl sim_follow
 ```

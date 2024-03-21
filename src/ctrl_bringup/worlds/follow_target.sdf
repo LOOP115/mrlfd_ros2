@@ -85,9 +85,9 @@
         <visual name="target_visual">
           <cast_shadows>false</cast_shadows>
           <geometry>
-            <box>
-              <size>0.04 0.04 0.04</size>
-            </box>
+            <sphere>
+              <radius>0.02</radius>
+            </sphere>
           </geometry>
           <material>
             <diffuse>0.1 0.1 0.1 1</diffuse>
