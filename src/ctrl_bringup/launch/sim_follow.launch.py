@@ -1,5 +1,4 @@
-#!/usr/bin/env -S ros2 launch
-"""Example of planning with MoveIt2 and executing motions using ROS 2 controllers within Gazebo"""
+#!/usr/bin/env python3
 
 from os import path
 from typing import List
