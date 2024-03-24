@@ -1,0 +1,6 @@
+float64[3] position
+float64[4] quat_xyzw
+bool cartesian
+---
+bool success
+string message
