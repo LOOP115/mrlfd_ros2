@@ -110,10 +110,7 @@ def generate_launch_description() -> LaunchDescription:
                             ("ros2_control", "true"),
                             ("ros2_control_plugin", "gz"),
                             ("ros2_control_interface", ros2_control_command_interface),
-                            (
-                                "gazebo_preserve_fixed_joint",
-                                gazebo_preserve_fixed_joint,
-                            ),
+                            ("gazebo_preserve_fixed_joint", gazebo_preserve_fixed_joint),
                             ("rviz_config", rviz_config),
                             ("use_sim_time", use_sim_time),
                             ("log_level", log_level),
