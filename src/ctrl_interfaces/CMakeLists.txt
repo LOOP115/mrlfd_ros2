@@ -11,6 +11,7 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/MoveToPose.srv"
+  "msg/FrankaJoints.msg"
 )
 
 ament_package()

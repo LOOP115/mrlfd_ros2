@@ -46,5 +46,8 @@ ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<IP>
 ```bash
 # Follow a target inside Ignition Gazebo
 ros2 launch ctrl_bringup sim_follow_target.launch.py
+
+# Publish Gazebo joint positions
+ros2 run ctrl_utils joints_publisher
 ```
 
