@@ -1,4 +1,4 @@
-# franka_ctrl
+# FRANKA_CTRL
 
 <br>
 
@@ -30,6 +30,18 @@ source install/setup.bash
 <br>
 
 ## Usage
+
+### Start ROS TCP Server
+
+```bash
+# Get ROS machine's IP
+hostname -I
+
+# Start the endpoint
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<IP>
+```
+
+### Examples
 
 ```bash
 # Follow a target inside Ignition Gazebo
