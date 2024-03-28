@@ -10,8 +10,9 @@ find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/MoveToPose.srv"
   "msg/FrankaJoints.msg"
+  "msg/PosTarget.msg"
+  "srv/MoveToPose.srv"
 )
 
 ament_package()

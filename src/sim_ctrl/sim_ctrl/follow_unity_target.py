@@ -1,10 +1,10 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import PoseStamped, Pose
+from ctrl_interfaces.msg import PosTarget
 from ctrl_interfaces.srv import MoveToPose
 
 
-class FollowTargetNode(Node):
+class FollowUnityTargetNode(Node):
     def __init__(self):
         super().__init__('move_to_pose_client')
         self.client = self.create_client(MoveToPose, 'move_to_pose')
@@ -12,34 +12,33 @@ class FollowTargetNode(Node):
             self.get_logger().info('move_to_pose service not available, waiting again...')
         
         self.subscription = self.create_subscription(
-            PoseStamped,
-            '/target_pose',
+            PosTarget,
+            '/unity_target_pose',
             self.pose_callback,
             10)
         
         self.last_pose = None
 
     
-    def similar_position(self, curr_pose: Pose, threshold=0.01):
+    def similar_position(self, curr_pose: PosTarget, threshold=0.01):
         """Check if two poses are similar within a certain threshold."""
         position_close = all(
-            abs(getattr(self.last_pose.position, attr) - getattr(curr_pose.position, attr)) < threshold
-            for attr in ['x', 'y', 'z']
+            abs(getattr(self.last_pose, attr) - getattr(curr_pose, attr)) < threshold
+            for attr in ['pos_x', 'pos_y', 'pos_z']
         )
         return position_close
 
 
-    def pose_callback(self, msg: PoseStamped):
-        # Check if the pose is significantly different from the last pose
-        if self.last_pose is None or not self.similar_position(msg.pose):
+    def pose_callback(self, msg: PosTarget):
+        # Check if the pose is different from the last pose
+        if self.last_pose is None or not self.similar_position(msg):
             
             # Extract position and orientation from the incoming message
-            position = [msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]
-            quat_xyzw = [msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z, msg.pose.orientation.w]
-            
+            position = [msg.pos_x, msg.pos_y, msg.pos_z]
+            quat_xyzw = [msg.rot_x, msg.rot_y, msg.rot_z, msg.rot_w]
             self.get_logger().info(f"New target pose received: {position}, {quat_xyzw}")
             self.send_request(position, quat_xyzw, False)  # Assuming cartesian is always False for simplicity
-            self.last_pose = msg.pose
+            self.last_pose = msg
 
 
     def send_request(self, position, quat_xyzw, cartesian):
@@ -61,7 +60,7 @@ class FollowTargetNode(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    node = FollowTargetNode()
+    node = FollowUnityTargetNode()
     rclpy.spin(node)
     node.destroy_node()
     rclpy.shutdown()

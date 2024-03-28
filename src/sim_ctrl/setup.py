@@ -20,9 +20,10 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'follow_target = sim_ctrl.follow_target:main',
             'move_to_pose = sim_ctrl.move_to_pose:main',
             'move_to_start = sim_ctrl.move_to_start:main',
+            'follow_target = sim_ctrl.follow_target:main',
+            'follow_unity_target = sim_ctrl.follow_unity_target:main',
         ],
     },
 )
