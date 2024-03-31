@@ -1,5 +1,7 @@
 # Franka_Ctrl
 
+This is the ROS2 endpoint for [Franka_XR](https://github.com/LOOP115/Franka_XR_Hub), which enables launching of ROS2 programs to control Franka in Gazebo or the real world.
+
 <br>
 
 ## Instructions
