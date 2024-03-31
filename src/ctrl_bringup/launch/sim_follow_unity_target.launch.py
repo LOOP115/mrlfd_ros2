@@ -166,6 +166,11 @@ def generate_launch_description() -> LaunchDescription:
                         package="sim_ctrl",
                         executable="follow_unity_target",
                     ),
+                    Node(
+                        package="ctrl_utils",
+                        executable="joints_publisher",
+                        parameters=[{"hz": 200.0}],
+                    )
                 ],
             )
         ),

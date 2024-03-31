@@ -8,6 +8,9 @@ from ctrl_interfaces.msg import FrankaJoints
 class JointPositionPublisher(Node):
     def __init__(self):
         super().__init__('joint_position_publisher')
+        self.declare_parameter('hz', 200.0)
+        self.publish_hz = self.get_parameter('hz').value
+
         # Subscribe to /joint_states
         self.subscription = self.create_subscription(
             JointState,
@@ -23,7 +26,6 @@ class JointPositionPublisher(Node):
             10)
 
         # Create a timer to publish
-        self.publish_hz = 200.0
         self.timer = self.create_timer(1.0 / self.publish_hz, self.timer_callback)
         self.last_positions = FrankaJoints()
 
