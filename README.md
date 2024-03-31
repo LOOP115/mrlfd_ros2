@@ -31,23 +31,26 @@ source install/setup.bash
 
 ## Usage
 
-### Start ROS TCP Server
+### Examples
+
+```bash
+# Move Franka to the default start configuration
+ros2 run sim_ctrl move_to_start
+
+# Follow the target inside Ignition Gazebo
+ros2 launch ctrl_bringup sim_follow_target.launch.py
+```
+
+### ROS Unity Integration
 
 ```bash
 # Get ROS machine's IP
 hostname -I
 
-# Start the endpoint
+# Start ROS TCP Server
 ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<IP>
-```
 
-### Examples
-
-```bash
-# Follow a target inside Ignition Gazebo
-ros2 launch ctrl_bringup sim_follow_target.launch.py
-
-# Publish Gazebo joint positions
-ros2 run ctrl_utils joints_publisher
+# Follow the target inside Unity
+ros2 launch ctrl_bringup sim_follow_unity_target.launch.py
 ```
 
