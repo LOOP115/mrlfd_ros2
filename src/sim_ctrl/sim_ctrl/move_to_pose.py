@@ -42,8 +42,9 @@ class MoveToPoseServerNode(Node):
 
         # Perform the move operation
         try:
+            self.moveit2.cancel_execution()  # Cancel any ongoing execution
             self.moveit2.move_to_pose(position=position, quat_xyzw=quat_xyzw, cartesian=cartesian)
-            self.moveit2.wait_until_executed()  # Assuming you want to wait for execution to complete
+            # self.moveit2.wait_until_executed()  # Assuming you want to wait for execution to complete
             response.success = True
             response.message = "Movement executed successfully."
         except Exception as e:

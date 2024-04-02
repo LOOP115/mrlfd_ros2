@@ -38,7 +38,7 @@ class FollowTargetNode(Node):
             quat_xyzw = [msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z, msg.pose.orientation.w]
             
             self.get_logger().info(f"New target pose received: {position}, {quat_xyzw}")
-            self.send_request(position, quat_xyzw, False)  # Assuming cartesian is always False for simplicity
+            self.send_request(position, quat_xyzw, True)  # Assuming cartesian is always False for simplicity
             self.last_pose = msg.pose
 
 
