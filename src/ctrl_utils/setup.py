@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             "joints_publisher = ctrl_utils.joints_publisher:main",
+            "unity_cmd_server = ctrl_utils.unity_cmd_server:main",
         ],
     },
 )
