@@ -169,8 +169,12 @@ def generate_launch_description() -> LaunchDescription:
                     Node(
                         package="ctrl_utils",
                         executable="joints_publisher",
-                        parameters=[{"hz": 200.0}],
-                    )
+                        parameters=[{"hz": 120.0}],
+                    ),
+                    Node(
+                        package="ctrl_utils",
+                        executable="unity_cmd_server",
+                    ),
                 ],
             )
         ),
