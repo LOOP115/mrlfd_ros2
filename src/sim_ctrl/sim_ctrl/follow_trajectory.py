@@ -4,7 +4,7 @@ from rclpy.node import Node
 
 from control_msgs.action import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from ctrl_interfaces.msg import FrankaJoints  # Import the custom message
+from ctrl_interfaces.msg import FrankaJoints
 
 
 panda_joint_names = ['panda_joint1', 
@@ -16,7 +16,7 @@ panda_joint_names = ['panda_joint1',
                      'panda_joint7']
 
 sec = 0
-nano_sec = 10 * 1000000  # n * 1ms
+nano_sec = 20 * 1000000  # n * 1ms
 
 
 class JointTrajectoryClient(Node):
@@ -62,10 +62,10 @@ class JointTrajectoryClient(Node):
     def goal_response_callback(self, future):
         goal_handle = future.result()
         if not goal_handle.accepted:
-            self.get_logger().info('Goal rejected :(')
+            self.get_logger().info('Goal rejected')
             return
 
-        self.get_logger().info('Goal accepted :)')
+        self.get_logger().info('Goal accepted')
         self.result_future = goal_handle.get_result_async()
         self.result_future.add_done_callback(self.get_result_callback)
 
