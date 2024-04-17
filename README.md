@@ -52,7 +52,7 @@ hostname -I
 # Start ROS TCP Server
 ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<IP>
 
-# Follow the target inside Unity
-ros2 launch ctrl_bringup sim_follow_unity_target.launch.py
+# Launch Unity and Gazebo integration
+ros2 launch ctrl_bringup sim_unity.launch.py
 ```
 
