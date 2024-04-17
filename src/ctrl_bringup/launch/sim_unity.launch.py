@@ -160,16 +160,19 @@ def generate_launch_description() -> LaunchDescription:
                     Node(
                         package="sim_ctrl",
                         executable="move_to_pose",
-
                     ),
                     Node(
                         package="sim_ctrl",
                         executable="follow_unity_target",
                     ),
                     Node(
+                        package="sim_ctrl",
+                        executable="follow_trajectory",
+                    ),
+                    Node(
                         package="ctrl_utils",
                         executable="joints_publisher",
-                        parameters=[{"hz": 120.0}],
+                        parameters=[{"hz": 100.0}],
                     ),
                     Node(
                         package="ctrl_utils",

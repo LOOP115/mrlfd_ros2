@@ -7,12 +7,12 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from ctrl_interfaces.msg import FrankaJoints
 
 
-panda_joint_names = ['panda_joint1', 
-                     'panda_joint2', 
-                     'panda_joint3', 
-                     'panda_joint4', 
-                     'panda_joint5', 
-                     'panda_joint6', 
+panda_joint_names = ['panda_joint1',
+                     'panda_joint2',
+                     'panda_joint3',
+                     'panda_joint4',
+                     'panda_joint5',
+                     'panda_joint6',
                      'panda_joint7']
 
 sec = 0
@@ -65,15 +65,14 @@ class JointTrajectoryClient(Node):
             self.get_logger().info('Goal rejected')
             return
 
-        self.get_logger().info('Goal accepted')
+        # self.get_logger().info('Goal accepted')
         self.result_future = goal_handle.get_result_async()
         self.result_future.add_done_callback(self.get_result_callback)
 
     def get_result_callback(self, future):
         result = future.result().result
-        if result.error_code == result.SUCCESSFUL:
-            self.get_logger().info('Goal succeeded!')
-        else:
+        if result.error_code != result.SUCCESSFUL:
+            # self.get_logger().info('Goal succeeded!')
             self.get_logger().info('Goal failed with error code: {0}'.format(result.error_code))
 
 def main(args=None):
