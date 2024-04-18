@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'plot_rt_manip = ctrl_data.plot_rt_manip:main',
+            'manip_publisher = ctrl_data.manip_publisher:main',
         ],
     },
 )

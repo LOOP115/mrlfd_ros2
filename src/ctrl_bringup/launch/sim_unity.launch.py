@@ -178,6 +178,11 @@ def generate_launch_description() -> LaunchDescription:
                         package="ctrl_utils",
                         executable="unity_cmd_server",
                     ),
+                    Node(
+                        package="ctrl_data",
+                        executable="manip_publisher",
+                        parameters=[{"hz": 50.0}],
+                    ),
                 ],
             )
         ),

@@ -58,6 +58,7 @@ class JacobianCalculator(Node):
         plt.draw()
         plt.pause(0.001)
 
+
 def main(args=None):
     rclpy.init(args=args)
     jacobian_calculator = JacobianCalculator()
