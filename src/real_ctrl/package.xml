@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>real_ctrl</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="54584749+LOOP115@users.noreply.github.com">jiahao</maintainer>
+  <license>TODO: License declaration</license>
+
+  <depend>geometry_msgs</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>ctrl_interfaces</depend>
+  <depend>trajectory_msgs</depend>
+  <depend>control_msgs</depend>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>moveit</exec_depend>
+  <exec_depend>pymoveit2</exec_depend>
+
+  <exec_depend>franka_description</exec_depend>
+  <exec_depend>franka_moveit_config</exec_depend>
+  
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
