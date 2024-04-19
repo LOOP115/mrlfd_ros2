@@ -3,8 +3,7 @@ from ctrl_data.franka_jacobian import get_jacobian
 import numpy as np
 import rclpy
 from rclpy.node import Node
-from sensor_msgs.msg import JointState
-from ctrl_interfaces.msg import Manipulability
+from ctrl_interfaces.msg import Manipulability, FrankaJoints
 import time
 
 
@@ -24,8 +23,8 @@ class ManipulabilityPublisher(Node):
         self.manipulability = None
 
         self.subscription = self.create_subscription(
-            JointState,
-            '/joint_states',
+            FrankaJoints,
+            '/franka_joints',
             self.joint_state_callback,
             10
         )
@@ -37,7 +36,7 @@ class ManipulabilityPublisher(Node):
     def joint_state_callback(self, msg):
         current_time = time.time()
         if (current_time - self.last_time) > self.throttle_period:
-            joint_positions = msg.position
+            joint_positions = msg.joints
 
             # Call your Jacobian function with joint positions
             jacobian_matrix = get_jacobian(joint_positions)
