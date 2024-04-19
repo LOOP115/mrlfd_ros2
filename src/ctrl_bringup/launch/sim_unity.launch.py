@@ -172,7 +172,7 @@ def generate_launch_description() -> LaunchDescription:
                     Node(
                         package="ctrl_utils",
                         executable="joints_publisher",
-                        parameters=[{"hz": 100.0}],
+                        parameters=[{"hz": 50.0}],
                     ),
                     Node(
                         package="ctrl_utils",
@@ -181,7 +181,7 @@ def generate_launch_description() -> LaunchDescription:
                     Node(
                         package="ctrl_data",
                         executable="manip_publisher",
-                        parameters=[{"hz": 50.0}],
+                        parameters=[{"hz": 5.0}],
                     ),
                 ],
             )

@@ -5,12 +5,14 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import JointState
 from ctrl_interfaces.msg import Manipulability
+import time
+
 
 class ManipulabilityPublisher(Node):
 
     def __init__(self):
         super().__init__('manipulability_publisher')
-        self.declare_parameter('hz', 50.0)
+        self.declare_parameter('hz', 5.0)
         self.publish_hz = self.get_parameter('hz').value
 
         self.publisher = self.create_publisher(
@@ -18,7 +20,7 @@ class ManipulabilityPublisher(Node):
             '/manipulability',
             10
         )
-        self.timer = self.create_timer(1 / self.publish_hz, self.publish_overall_product)
+        # self.timer = self.create_timer(1 / self.publish_hz, self.publish_manipulability)
         self.manipulability = None
 
         self.subscription = self.create_subscription(
@@ -28,20 +30,30 @@ class ManipulabilityPublisher(Node):
             10
         )
         self.subscription  # prevent unused variable warning
+        self.last_time = time.time()
+        self.throttle_period = 1 / self.publish_hz
+
 
     def joint_state_callback(self, msg):
-        joint_positions = msg.position
+        current_time = time.time()
+        if (current_time - self.last_time) > self.throttle_period:
+            joint_positions = msg.position
 
-        # Call your Jacobian function with joint positions
-        jacobian_matrix = get_jacobian(joint_positions)
+            # Call your Jacobian function with joint positions
+            jacobian_matrix = get_jacobian(joint_positions)
 
-        # Compute SVD of the Jacobian matrix
-        _, singular_values, _ = np.linalg.svd(jacobian_matrix)
+            # Compute SVD of the Jacobian matrix
+            _, singular_values, _ = np.linalg.svd(jacobian_matrix)
 
-        # Compute the overall product of singular values
-        self.manipulability = np.prod(singular_values)
+            # Compute the overall product of singular values
+            self.manipulability = np.prod(singular_values)
 
-    def publish_overall_product(self):
+            self.publish_manipulability()
+
+            self.last_time = current_time
+
+
+    def publish_manipulability(self):
         if self.manipulability is not None:
             msg = Manipulability()
             msg.value = self.manipulability
