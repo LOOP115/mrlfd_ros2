@@ -16,7 +16,7 @@ panda_joint_names = ['panda_joint1',
                      'panda_joint7']
 
 sec = 0
-nano_sec = 20 * 1000000  # n * 1ms
+nano_sec = 50 * 1000000  # n * 1ms
 
 
 class JointTrajectoryClient(Node):
