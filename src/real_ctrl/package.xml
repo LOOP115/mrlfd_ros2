@@ -11,6 +11,7 @@
   <depend>moveit_ros_planning_interface</depend>
   <depend>ctrl_interfaces</depend>
   <depend>trajectory_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>control_msgs</depend>
 
   <exec_depend>rclpy</exec_depend>

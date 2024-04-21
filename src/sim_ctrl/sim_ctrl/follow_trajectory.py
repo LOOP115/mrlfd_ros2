@@ -29,28 +29,29 @@ class JointTrajectoryClient(Node):
             self.listener_callback,
             10)
         self.subscription  # prevent unused variable warning
+        self.last_positions = None
 
-    def send_goal(self, positions):
-        # Check if positions is not None and has elements
-        # self.get_logger().info(f"Sending positions: {positions}")
+    def send_goal(self, current_positions):
+        if self.last_positions is None:
+            self.last_positions = current_positions  # Initialize last_positions on first receive
+            return
 
-        if positions is None or len(positions) == 0:
-            self.get_logger().info('Received empty or None positions array.')
-            return
-        
-        try:
-            positions = [float(pos) for pos in positions]
-        except ValueError as e:
-            self.get_logger().error(f"Invalid input in positions array: {e}")
-            return
-        
         goal_msg = FollowJointTrajectory.Goal()
         goal_msg.trajectory.joint_names = panda_joint_names
-        point = JointTrajectoryPoint()
-        point.positions = positions
-        point.time_from_start.sec = sec
-        point.time_from_start.nanosec = nano_sec
-        goal_msg.trajectory.points.append(point)
+        num_interpolations = 20
+
+        for i in range(num_interpolations + 1):
+            point = JointTrajectoryPoint()
+            interpolated_positions = [
+                last + (current - last) * i / num_interpolations
+                for last, current in zip(self.last_positions, current_positions)
+            ]
+            point.positions = interpolated_positions
+            point.time_from_start.sec = sec
+            point.time_from_start.nanosec = i * nano_sec
+            goal_msg.trajectory.points.append(point)
+
+        self.last_positions = current_positions  # Update the last_positions with the current
 
         self.client.wait_for_server()
         self.send_goal_future = self.client.send_goal_async(goal_msg)

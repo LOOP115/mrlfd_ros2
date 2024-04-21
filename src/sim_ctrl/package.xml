@@ -12,6 +12,7 @@
   <depend>ctrl_interfaces</depend>
   <depend>trajectory_msgs</depend>
   <depend>control_msgs</depend>
+  <depend>sensor_msgs</depend>
 
   <exec_depend>ign_ros2_control</exec_depend>
   <exec_depend>moveit</exec_depend>
