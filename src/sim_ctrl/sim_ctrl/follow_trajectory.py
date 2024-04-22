@@ -5,6 +5,7 @@ from rclpy.node import Node
 from control_msgs.action import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from ctrl_interfaces.msg import FrankaJoints
+from math import cos, pi
 
 
 panda_joint_names = ['panda_joint1',
@@ -16,7 +17,9 @@ panda_joint_names = ['panda_joint1',
                      'panda_joint7']
 
 sec = 0
-nano_sec = 20 * 1000000  # n * 1ms
+nano_sec = 50 * 1000000  # n * 1ms
+smoothing_factor = 0.01
+joints_change_threshold = 0.2
 
 
 class JointTrajectoryClient(Node):
@@ -35,27 +38,45 @@ class JointTrajectoryClient(Node):
         if self.last_positions is None:
             self.last_positions = current_positions  # Initialize last_positions on first receive
             return
+        
+        # Computer diff
+        diff = [(last - current) for last, current in zip(self.last_positions, current_positions)]
+        diff_joints_magnitude = 0.0
+        for d in diff:
+            diff_joints_magnitude += d * d
+        diff_joints_magnitude = diff_joints_magnitude ** 0.5
+        max_count = int(diff_joints_magnitude / smoothing_factor)
 
         goal_msg = FollowJointTrajectory.Goal()
         goal_msg.trajectory.joint_names = panda_joint_names
-        num_interpolations = 20
 
-        for i in range(num_interpolations + 1):
-            point = JointTrajectoryPoint()
-            interpolated_positions = [
-                last + (current - last) * i / num_interpolations
-                for last, current in zip(self.last_positions, current_positions)
-            ]
-            point.positions = interpolated_positions
-            point.time_from_start.sec = sec
-            point.time_from_start.nanosec = i * nano_sec
-            goal_msg.trajectory.points.append(point)
+        if (max_count > 1 and diff_joints_magnitude >= joints_change_threshold):
+            for i in range(max_count + 1):
+                point = JointTrajectoryPoint()
+                w = 0.5 * (1 - cos(pi * i / (max_count - 1)))
+                interpolated_positions = [
+                    last + w * (last - current)
+                    for last, current in zip(self.last_positions, current_positions)
+                ]
+                point.positions = interpolated_positions
+                point.time_from_start.sec = sec
+                point.time_from_start.nanosec = int(i * nano_sec)
+                goal_msg.trajectory.points.append(point)
 
-        self.last_positions = current_positions  # Update the last_positions with the current
+            self.last_positions = current_positions
+            self.client.wait_for_server()
+            self.send_goal_future = self.client.send_goal_async(goal_msg)
+            self.send_goal_future.add_done_callback(self.goal_response_callback)
+        else:
+            goal_msg.trajectory.points.append(JointTrajectoryPoint(positions=current_positions))
+            goal_msg.trajectory.points[0].time_from_start.sec = sec
+            goal_msg.trajectory.points[0].time_from_start.nanosec = nano_sec
+            
+            self.last_positions = current_positions
+            self.client.wait_for_server()
+            self.send_goal_future = self.client.send_goal_async(goal_msg)
+            self.send_goal_future.add_done_callback(self.goal_response_callback)
 
-        self.client.wait_for_server()
-        self.send_goal_future = self.client.send_goal_async(goal_msg)
-        self.send_goal_future.add_done_callback(self.goal_response_callback)
 
     def listener_callback(self, msg):
         self.send_goal(msg.joints)  # Access the joints field of the custom message

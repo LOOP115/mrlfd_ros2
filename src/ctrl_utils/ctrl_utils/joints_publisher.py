@@ -8,7 +8,7 @@ from ctrl_interfaces.msg import FrankaJoints
 class JointPositionPublisher(Node):
     def __init__(self):
         super().__init__('joint_position_publisher')
-        self.declare_parameter('hz', 200.0)
+        self.declare_parameter('hz', 25.0)
         self.publish_hz = self.get_parameter('hz').value
 
         # Subscribe to /joint_states

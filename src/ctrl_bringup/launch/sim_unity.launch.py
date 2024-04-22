@@ -176,7 +176,7 @@ def generate_launch_description() -> LaunchDescription:
                     ),
                     Node(
                         package="ctrl_utils",
-                        executable="unity_cmd_server",
+                        executable="move_to_start_server",
                     ),
                     Node(
                         package="ctrl_data",

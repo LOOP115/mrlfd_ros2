@@ -235,9 +235,14 @@ def generate_launch_description():
         parameters=[{"hz": 50.0}],
     )
 
-    unity_cmd_server = Node(
+    move_to_start_server = Node(
         package="ctrl_utils",
-        executable="unity_cmd_server",
+        executable="move_to_start_server",
+    )
+
+    gripper_server = Node(
+        package="ctrl_utils",
+        executable="gripper_server",
     )
     
     manip_publisher = Node(
@@ -276,7 +281,8 @@ def generate_launch_description():
             franka_robot_state_broadcaster,
             gripper_launch_file,
             franka_joints_publisher,
-            unity_cmd_server,
+            move_to_start_server,
+            gripper_server,
             manip_publisher,
             follow_trajectory,
             move_to_pose,

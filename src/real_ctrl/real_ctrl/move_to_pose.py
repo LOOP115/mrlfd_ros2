@@ -29,7 +29,7 @@ class MoveToPoseServerNode(Node):
         )
 
         # You might need to adjust these parameters or make them configurable via service request
-        self.moveit2.planner_id = "RRTConnectkConfigDefault"
+        self.moveit2.planner_id = "RRTstarkConfigDefault"
         self.moveit2.max_velocity = 1.0
         self.moveit2.max_acceleration = 1.0
 
