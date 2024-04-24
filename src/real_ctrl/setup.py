@@ -25,6 +25,7 @@ setup(
             'move_to_pose = real_ctrl.move_to_pose:main',
             'follow_unity_target = real_ctrl.follow_unity_target:main',
             'move_to_start = real_ctrl.move_to_start:main',
+            'trajectory_to_start = real_ctrl.trajectory_to_start:main',
         ],
     },
 )

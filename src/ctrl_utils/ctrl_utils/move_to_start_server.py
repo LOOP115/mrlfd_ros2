@@ -27,7 +27,7 @@ class MoveToStartServer(Node):
             if msg.command == "move_to_start":
                 # Start the subprocess with Popen
                 process = subprocess.Popen(
-                    ["ros2", "run", "real_ctrl", "move_to_start"],
+                    ["ros2", "run", "real_ctrl", "trajectory_to_start"],
                     text=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
@@ -35,7 +35,7 @@ class MoveToStartServer(Node):
 
                 try:
                     # Wait for the subprocess to finish within the timeout
-                    stdout, stderr = process.communicate(timeout=10)
+                    stdout, stderr = process.communicate(timeout=15)
                 except subprocess.TimeoutExpired:
                     # Handle the timeout case by terminating the process
                     process.kill()
