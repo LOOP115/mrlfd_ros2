@@ -4,8 +4,10 @@ from rclpy.node import Node
 
 from control_msgs.action import FollowJointTrajectory
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from sensor_msgs.msg import JointState
 from ctrl_interfaces.msg import FrankaJoints
 from math import cos, pi
+import time
 
 
 panda_joint_names = ['panda_joint1',
@@ -21,27 +23,46 @@ nano_sec = 200 * 1000000  # n * 1ms
 nano_to_sec = 1000000000
 smoothing_factor = 0.01
 joints_change_threshold = 0.2
+unity_pos_timeout = 1  # Threshold for message timeout in seconds
 
 
-class JointTrajectoryClient(Node):
+class JointTrajectoryController(Node):
     def __init__(self):
         super().__init__('joint_trajectory_client')
         self.client = ActionClient(self, FollowJointTrajectory, '/panda_arm_controller/follow_joint_trajectory')
         self.unity_pos_subscription = self.create_subscription(
-            FrankaJoints,  # Use the custom message type
+            FrankaJoints,
             '/unity_franka_joints',
-            self.listener_callback,
+            self.unity_pos_listener_callback,
             10)
-        self.unity_pos_subscription  # prevent unused variable warning
-        self.last_positions = None
+        self.unity_pos_subscription
+        
 
-    def send_goal(self, current_positions):
-        if self.last_positions is None:
-            self.last_positions = current_positions  # Initialize last_positions on first receive
-            return
+        self.self_pos_subscription = self.create_subscription(
+            JointState,
+            '/joint_states',
+            self.self_pos_listener_callback,
+            10)
+        self.self_pos_subscription
+    
+        self.last_pos = None
+        self.curr_pos = None
+        self.last_unity_pos_time = None
+
+
+    def send_goal(self, unity_pos):
+        if self.last_pos is None:
+            self.last_pos = self.curr_pos
+        
+        # Check if last_pos is outdated
+        if self.last_unity_pos_time is not None:
+            elapsed_time = time.time() - self.last_unity_pos_time
+            if elapsed_time > unity_pos_timeout:
+                self.get_logger().info('Unity position message timed out')
+                self.last_pos = self.curr_pos
         
         # Computer diff
-        diff = [(last - current) for last, current in zip(self.last_positions, current_positions)]
+        diff = [(last - target) for last, target in zip(self.last_pos, unity_pos)]
         diff_joints_magnitude = 0.0
         for d in diff:
             diff_joints_magnitude += d * d
@@ -57,7 +78,7 @@ class JointTrajectoryClient(Node):
                 w = 0.5 * (1 - cos(pi * i / (max_count - 1)))
                 interpolated_positions = [
                     last + w * (last - current)
-                    for last, current in zip(self.last_positions, current_positions)
+                    for last, current in zip(self.last_pos, unity_pos)
                 ]
 
                 point.positions = interpolated_positions
@@ -71,24 +92,28 @@ class JointTrajectoryClient(Node):
                 point.time_from_start.nanosec = remaining_nanoseconds
                 goal_msg.trajectory.points.append(point)
 
-            self.last_positions = current_positions
+            self.last_pos = unity_pos
             self.client.wait_for_server()
             self.send_goal_future = self.client.send_goal_async(goal_msg)
             self.send_goal_future.add_done_callback(self.goal_response_callback)
         else:
-            goal_msg.trajectory.points.append(JointTrajectoryPoint(positions=current_positions))
+            goal_msg.trajectory.points.append(JointTrajectoryPoint(positions=unity_pos))
             goal_msg.trajectory.points[0].time_from_start.sec = sec
             goal_msg.trajectory.points[0].time_from_start.nanosec = nano_sec
             
-            self.last_positions = current_positions
+            self.last_pos = unity_pos
             self.client.wait_for_server()
             self.send_goal_future = self.client.send_goal_async(goal_msg)
             self.send_goal_future.add_done_callback(self.goal_response_callback)
 
 
-    def listener_callback(self, msg):
-        self.send_goal(msg.joints)  # Access the joints field of the custom message
+    def unity_pos_listener_callback(self, msg):
+        self.last_unity_pos_time = time.time()
+        self.send_goal(msg.joints)
 
+    def self_pos_listener_callback(self, msg):
+        self.curr_pos = msg.position[:7]
+    
     def goal_response_callback(self, future):
         goal_handle = future.result()
         if not goal_handle.accepted:
@@ -107,7 +132,7 @@ class JointTrajectoryClient(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-    client = JointTrajectoryClient()
+    client = JointTrajectoryController()
     rclpy.spin(client)
     client.destroy_node()
     rclpy.shutdown()

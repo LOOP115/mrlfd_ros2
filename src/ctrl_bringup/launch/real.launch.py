@@ -155,6 +155,16 @@ def generate_launch_description():
         ],
     )
 
+
+    franka_controllers = PathJoinSubstitution(
+        [
+            FindPackageShare('franka_bringup'),
+            'config',
+            'controllers.yaml',
+        ]
+    )
+
+
     # Publish TF
     robot_state_publisher = Node(
         package='robot_state_publisher',
@@ -172,7 +182,7 @@ def generate_launch_description():
     ros2_control_node = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        parameters=[robot_description, ros2_controllers_path],
+        parameters=[robot_description, ros2_controllers_path, franka_controllers],
         remappings=[('joint_states', 'franka/joint_states')],
         output={
             'stdout': 'screen',
@@ -201,11 +211,11 @@ def generate_launch_description():
     )
 
     franka_robot_state_broadcaster = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['franka_robot_state_broadcaster'],
-        output='screen',
-        condition=UnlessCondition(use_fake_hardware),
+            package='controller_manager',
+            executable='spawner',
+            arguments=['franka_robot_state_broadcaster'],
+            output='screen',
+            condition=UnlessCondition(use_fake_hardware),
     )
 
     robot_arg = DeclareLaunchArgument(
@@ -228,65 +238,18 @@ def generate_launch_description():
                           use_fake_hardware_parameter_name: use_fake_hardware}.items(),
     )
 
-
-    franka_joints_publisher = Node(
-        package="ctrl_utils",
-        executable="joints_publisher",
-        parameters=[{"hz": 50.0}],
-    )
-
-    move_to_start_server = Node(
-        package="ctrl_utils",
-        executable="move_to_start_server",
-    )
-
-    gripper_server = Node(
-        package="ctrl_utils",
-        executable="gripper_server",
-    )
-    
-    manip_publisher = Node(
-        package="ctrl_data",
-        executable="manip_publisher",
-        parameters=[{"hz": 5.0}],
-    )
-
-    follow_trajectory = Node(
-        package="real_ctrl",
-        executable="follow_trajectory",
-    )
-
-    move_to_pose = Node(
-        package="real_ctrl",
-        executable="move_to_pose",
-    )
-
-    follow_unity_target = Node(
-        package="real_ctrl",
-        executable="follow_unity_target",
-    )
-
-
     return LaunchDescription(
-        [
-            robot_arg,
-            use_fake_hardware_arg,
-            fake_sensor_commands_arg,
-            db_arg,
-            rviz_node,
-            robot_state_publisher,
-            run_move_group_node,
-            ros2_control_node,
-            joint_state_publisher,
-            franka_robot_state_broadcaster,
-            gripper_launch_file,
-            franka_joints_publisher,
-            move_to_start_server,
-            gripper_server,
-            manip_publisher,
-            follow_trajectory,
-            move_to_pose,
-            follow_unity_target
-        ]
+        [robot_arg,
+         use_fake_hardware_arg,
+         fake_sensor_commands_arg,
+         db_arg,
+         rviz_node,
+         robot_state_publisher,
+         run_move_group_node,
+         ros2_control_node,
+         joint_state_publisher,
+         franka_robot_state_broadcaster,
+         gripper_launch_file
+         ]
         + load_controllers
     )

@@ -3,7 +3,6 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    ld = LaunchDescription()
 
     franka_joints_publisher = Node(
         package="ctrl_utils",
@@ -27,9 +26,14 @@ def generate_launch_description():
         parameters=[{"hz": 5.0}],
     )
 
+    # follow_trajectory = Node(
+    #     package="real_ctrl",
+    #     executable="follow_trajectory",
+    # )
+
     follow_trajectory = Node(
         package="real_ctrl",
-        executable="follow_trajectory",
+        executable="follow_trajectory_v2",
     )
 
     move_to_pose = Node(

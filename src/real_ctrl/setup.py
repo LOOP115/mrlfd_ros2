@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'follow_trajectory = real_ctrl.follow_trajectory:main',
+            'follow_trajectory_v2 = real_ctrl.follow_trajectory_v2:main',
             'move_to_pose = real_ctrl.move_to_pose:main',
             'follow_unity_target = real_ctrl.follow_unity_target:main',
             'move_to_start = real_ctrl.move_to_start:main',

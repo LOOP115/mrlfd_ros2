@@ -14,7 +14,7 @@ def main():
     rclpy.init()
 
     # Create node for this example
-    node = Node("joint_goal")
+    node = Node("move_to_start")
 
     # Declare parameter for joint positions
     node.declare_parameter(
@@ -33,7 +33,7 @@ def main():
     # If non-positive, don't cancel. Only used if synchronous is False
     node.declare_parameter("cancel_after_secs", 0.0)
     # Planner ID
-    node.declare_parameter("planner_id", "RRTstarkConfigDefault")
+    node.declare_parameter("planner_id", "TRRTkConfigDefault")
 
     # Create callback group that allows execution of callbacks in parallel without restrictions
     callback_group = ReentrantCallbackGroup()

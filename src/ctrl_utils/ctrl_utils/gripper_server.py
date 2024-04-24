@@ -18,36 +18,38 @@ class GripperServer(Node):
         
         try:
             if msg.command == "gripper_home":
-                # Execute the ROS 2 action to home the gripper with a timeout
-                completed_process = subprocess.run(
+                # Start the subprocess with Popen
+                process = subprocess.Popen(
                     ["ros2", "action", "send_goal", "/panda_gripper/homing", "franka_msgs/action/Homing", "{}"],
                     text=True,
-                    capture_output=True,
-                    timeout=10  # Timeout in seconds
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
                 )
-                # Check if the subprocess completed successfully
-                if completed_process.returncode == 0:
-                    print("Gripper homing completed successfully.\n")
-                else:
-                    print(f"Error during gripper homing: {completed_process.stderr}\n")
-
             elif msg.command == "gripper_grasp":
-                # Execute the ROS 2 action to grasp with specified parameters with a timeout
-                completed_process = subprocess.run(
-                    ["ros2", "action", "send_goal", "-f", "/panda_gripper/grasp", "franka_msgs/action/Grasp", 
-                     "{width: 0.00, speed: 0.05, force: 50}"],
+                # Start the subprocess with Popen
+                process = subprocess.Popen(
+                    ["ros2", "action", "send_goal", "-f", "/panda_gripper/grasp", "franka_msgs/action/Grasp",
+                    "{width: 0.00, speed: 0.03, force: 50}"],
                     text=True,
-                    capture_output=True,
-                    timeout=10  # Timeout in seconds
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
                 )
-                # Check if the subprocess completed successfully
-                if completed_process.returncode == 0:
-                    print("Gripper grasp completed successfully.\n")
-                else:
-                    print(f"Error during gripper grasp: {completed_process.stderr}\n")
 
-        except subprocess.TimeoutExpired:
-            print(f"Command '{msg.command}' timed out.\n")
+            # Wait for the subprocess to complete within the timeout
+            try:
+                stdout, stderr = process.communicate(timeout=10)
+            except subprocess.TimeoutExpired:
+                process.kill()  # Terminate the process if it times out
+                stdout, stderr = process.communicate()  # Collect any output after killing
+                print(f"Command '{msg.command}' timed out.\n")
+            else:
+                if process.returncode == 0:
+                    print(f"{msg.command} completed successfully.\n")
+                else:
+                    print(f"Error during {msg.command}: {stderr}\n")
+
+        except Exception as e:
+            print(f"An error occurred handling command '{msg.command}': {str(e)}\n")
 
 
 def main(args=None):
