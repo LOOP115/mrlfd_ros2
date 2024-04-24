@@ -14,10 +14,9 @@ class GripperServer(Node):
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
-        self.get_logger().info('Command received: "%s"' % msg.command)
-        
         try:
             if msg.command == "gripper_home":
+                self.get_logger().info('Command received: "%s"' % msg.command)
                 # Start the subprocess with Popen
                 process = subprocess.Popen(
                     ["ros2", "action", "send_goal", "/panda_gripper/homing", "franka_msgs/action/Homing", "{}"],
@@ -26,6 +25,7 @@ class GripperServer(Node):
                     stderr=subprocess.PIPE
                 )
             elif msg.command == "gripper_grasp":
+                self.get_logger().info('Command received: "%s"' % msg.command)
                 # Start the subprocess with Popen
                 process = subprocess.Popen(
                     ["ros2", "action", "send_goal", "-f", "/panda_gripper/grasp", "franka_msgs/action/Grasp",

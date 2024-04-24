@@ -21,10 +21,9 @@ class MoveToStartServer(Node):
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
-        self.get_logger().info('Command received: "%s"' % msg.command)
-        
         try:
             if msg.command == "move_to_start":
+                self.get_logger().info('Command received: "%s"' % msg.command)
                 # Start the subprocess with Popen
                 process = subprocess.Popen(
                     ["ros2", "run", "real_ctrl", "trajectory_to_start"],

@@ -28,12 +28,17 @@ def generate_launch_description():
 
     # follow_trajectory = Node(
     #     package="real_ctrl",
-    #     executable="follow_trajectory",
+    #     executable="follow_trajectory_v1",
+    # )
+
+    # follow_trajectory = Node(
+    #     package="real_ctrl",
+    #     executable="follow_trajectory_v2",
     # )
 
     follow_trajectory = Node(
         package="real_ctrl",
-        executable="follow_trajectory_v2",
+        executable="follow_trajectory_v3",
     )
 
     move_to_pose = Node(

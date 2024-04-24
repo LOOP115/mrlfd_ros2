@@ -27,7 +27,7 @@ class TrajectoryToStart(Node):
             0.7853981633974483,
         ]
 
-        self.exec_sec = 7
+        self.exec_sec = 5
 
     def send_start_positions(self):
         goal_msg = FollowJointTrajectory.Goal()
