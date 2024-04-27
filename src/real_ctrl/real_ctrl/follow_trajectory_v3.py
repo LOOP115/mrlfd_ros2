@@ -26,8 +26,8 @@ long_nano_sec = 300 * 1000000  # n * 1ms
 
 nano_to_sec = 1000000000
 smoothing_factor = 0.01
-joints_change_threshold = 0.25
-unity_pos_timeout = 1  # Threshold for message timeout in seconds
+joints_change_threshold = 0.2
+unity_pos_timeout = 0.1  # Threshold for message timeout in seconds
 
 
 class JointTrajectoryControllerV3(Node):
@@ -60,10 +60,15 @@ class JointTrajectoryControllerV3(Node):
         
         # Check if last_pos is outdated
         if self.last_unity_pos_time is not None:
-            elapsed_time = time.time() - self.last_unity_pos_time
+            elapsed_time = time.monotonic() - self.last_unity_pos_time
+            # self.get_logger().info(f'{elapsed_time} seconds since last unity position message')
             if elapsed_time > unity_pos_timeout:
-                self.get_logger().info('Unity position message timed out')
+                # self.get_logger().info('Unity position message timed out')
                 self.last_pos = self.curr_pos
+        else:
+            self.last_pos = self.curr_pos
+        
+        self.last_unity_pos_time = time.monotonic()
         
         # Computer diff
         diff = [(last - target) for last, target in zip(self.last_pos, unity_pos)]
@@ -103,7 +108,7 @@ class JointTrajectoryControllerV3(Node):
         else:
             goal_msg.trajectory.points.append(JointTrajectoryPoint(positions=unity_pos))
             goal_msg.trajectory.points[0].time_from_start.sec = sec
-            goal_msg.trajectory.points[0].time_from_start.nanosec = long_nano_sec
+            goal_msg.trajectory.points[0].time_from_start.nanosec = nano_sec
             
             self.last_pos = unity_pos
             self.client.wait_for_server()
@@ -112,7 +117,7 @@ class JointTrajectoryControllerV3(Node):
 
 
     def unity_pos_listener_callback(self, msg):
-        self.last_unity_pos_time = time.time()
+        # self.get_logger().info(f'Received Unity position message at {self.last_unity_pos_time}')
         self.send_goal(msg.joints)
 
     def self_pos_listener_callback(self, msg):

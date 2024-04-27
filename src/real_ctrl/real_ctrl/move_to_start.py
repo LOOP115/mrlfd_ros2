@@ -33,7 +33,7 @@ def main():
     # If non-positive, don't cancel. Only used if synchronous is False
     node.declare_parameter("cancel_after_secs", 0.0)
     # Planner ID
-    node.declare_parameter("planner_id", "TRRTkConfigDefault")
+    node.declare_parameter("planner_id", "RRTstarkConfigDefault")
 
     # Create callback group that allows execution of callbacks in parallel without restrictions
     callback_group = ReentrantCallbackGroup()
