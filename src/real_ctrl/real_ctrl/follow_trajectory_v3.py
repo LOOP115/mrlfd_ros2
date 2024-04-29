@@ -22,11 +22,11 @@ sec = 0
 long_sec = 1
 
 nano_sec = 200 * 1000000  # n * 1ms
-long_nano_sec = 300 * 1000000  # n * 1ms
+long_nano_sec = 200 * 1000000  # n * 1ms
 
 nano_to_sec = 1000000000
 smoothing_factor = 0.01
-joints_change_threshold = 0.25
+joints_change_threshold = 0.2
 unity_pos_timeout = 0.1  # Threshold for message timeout in seconds
 
 
@@ -76,7 +76,7 @@ class JointTrajectoryControllerV3(Node):
         for d in diff:
             diff_joints_magnitude += d * d
         diff_joints_magnitude = diff_joints_magnitude ** 0.5
-        max_count = int(diff_joints_magnitude / smoothing_factor)
+        max_count = int(diff_joints_magnitude / smoothing_factor) + 1
 
         goal_msg = FollowJointTrajectory.Goal()
         goal_msg.trajectory.joint_names = panda_joint_names
@@ -108,7 +108,7 @@ class JointTrajectoryControllerV3(Node):
         else:
             goal_msg.trajectory.points.append(JointTrajectoryPoint(positions=unity_pos))
             goal_msg.trajectory.points[0].time_from_start.sec = sec
-            goal_msg.trajectory.points[0].time_from_start.nanosec = nano_sec
+            goal_msg.trajectory.points[0].time_from_start.nanosec = long_nano_sec
             
             self.last_pos = unity_pos
             self.client.wait_for_server()

@@ -29,7 +29,7 @@ class GripperServer(Node):
                 # Start the subprocess with Popen
                 process = subprocess.Popen(
                     ["ros2", "action", "send_goal", "-f", "/panda_gripper/grasp", "franka_msgs/action/Grasp",
-                    "{width: 0.00, speed: 0.03, force: 50}"],
+                    "{width: 0.00, speed: 0.02, force: 50}"],
                     text=True,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE
