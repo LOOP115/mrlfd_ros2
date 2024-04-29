@@ -26,7 +26,7 @@ long_nano_sec = 300 * 1000000  # n * 1ms
 
 nano_to_sec = 1000000000
 smoothing_factor = 0.01
-joints_change_threshold = 0.2
+joints_change_threshold = 0.25
 unity_pos_timeout = 0.1  # Threshold for message timeout in seconds
 
 
