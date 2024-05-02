@@ -1,4 +1,4 @@
-# Franka_Ctrl
+# XRFranka ROS2
 
 This is the ROS2 endpoint for [XRFranka](https://github.com/LOOP115/Franka_XR_Hub), which enables launching of ROS2 programs to control Franka in Gazebo or the real world.
 
@@ -17,10 +17,10 @@ Before using this repository. please make sure you have setup the following depe
 
 ```bash
 # Clone the repo to anywhere you like, the repo itself is a ROS2 workspace
-git clone https://github.com/LOOP115/franka_ctrl
+git clone https://github.com/LOOP115/xrfranka_ros2
 
 # Build
-cd franka_ctrl
+cd xrfranka_ros2
 colcon build
 ```
 
