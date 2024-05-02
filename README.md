@@ -39,7 +39,7 @@ gedit ~/.bashrc
 ```
 
 ```bash
-source ~/project/franka_sim/install/setup.bash
+source ~/project/xrfranka_ros2/install/setup.bash
 ```
 
 <br>
