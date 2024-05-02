@@ -1,6 +1,6 @@
 # Franka_Ctrl
 
-This is the ROS2 endpoint for [Franka_XR](https://github.com/LOOP115/Franka_XR_Hub), which enables launching of ROS2 programs to control Franka in Gazebo or the real world.
+This is the ROS2 endpoint for [XRFranka](https://github.com/LOOP115/Franka_XR_Hub), which enables launching of ROS2 programs to control Franka in Gazebo or the real world.
 
 <br>
 
@@ -8,12 +8,15 @@ This is the ROS2 endpoint for [Franka_XR](https://github.com/LOOP115/Franka_XR_H
 
 ### Dependencies
 
-Please follow this [link](https://github.com/LOOP115/XR_Franka_Hub/blob/main/docs/franka/setup_franka.md) to setup dependencies before using this repository.
+Before using this repository. please make sure you have setup the following dependencies:
+
+- [franka_ros2](https://github.com/LOOP115/Franka_XR_Hub/blob/main/docs/franka/franka_ros2.md)
+- [Gazebo](https://github.com/LOOP115/Franka_XR_Hub/blob/main/docs/franka/gazebo.md)
 
 ### Building
 
 ```bash
-# Clone the repo and build
+# Clone the repo to anywhere you like, the repo itself is a ROS2 workspace
 git clone https://github.com/LOOP115/franka_ctrl
 
 # Build
@@ -23,36 +26,64 @@ colcon build
 
 ### Sourcing
 
-Before using this package, remember to source the ROS 2 workspace.
+Before using this package, remember to source it.
 
 ```bash
 source install/setup.bash
+```
+
+You can also add a line to `~/.bashrc` like this:
+
+```bash
+gedit ~/.bashrc
+```
+
+```bash
+source ~/project/franka_sim/install/setup.bash
 ```
 
 <br>
 
 ## Usage
 
-### Examples
+- Make sure the ROS machine and the machine running the Unity application are on the same Wi-Fi network.
+- Get ROS machine's IP
 
 ```bash
-# Move Franka to the default start configuration
-ros2 run sim_ctrl move_to_start
-
-# Follow the target inside Ignition Gazebo
-ros2 launch ctrl_bringup sim_follow_target.launch.py
+hostname -I
 ```
 
-### ROS Unity Integration
+- Start ROS TCP Endpoint
 
 ```bash
-# Get ROS machine's IP
-hostname -I
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<ros_ip>
+```
 
-# Start ROS TCP Server
-ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<IP>
+### Kinesthetic Teaching
 
-# Launch Unity and Gazebo integration
-ros2 launch ctrl_bringup sim_unity.launch.py
+- First, launch nodes for visualizations
+
+```bash
+ros2 launch ctrl_bringup visual.launch.py
+```
+
+- Then, launch the gravity compensation controller
+
+```bash
+ros2 launch franka_bringup gravity_compensation_example_controller.launch.py robot_ip:=<robot_ip>
+```
+
+### Teleoperation
+
+- First, launch necessary nodes
+
+```bash
+ros2 launch ctrl_bringup all_nodes.launch.py
+```
+
+- Then, launch the Franka
+
+```bash
+ros2 launch franka_moveit_config moveit.launch.py robot_ip:=<robot_ip>
 ```
 
