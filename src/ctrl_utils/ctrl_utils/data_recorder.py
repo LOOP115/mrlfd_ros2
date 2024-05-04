@@ -56,11 +56,13 @@ class DataRecorder(Node):
                     else:
                         print("Recording is started...")
                 elif key == 'q':
-                    duration = time.time() - self.start_time
-                    print(f"Recording stopped. Duration: {duration:.2f} seconds")
-                    self.recording = False
-                    self.save_to_csv()
-
+                    if self.recording:
+                        duration = time.time() - self.start_time
+                        print(f"Recording stopped. Duration: {duration:.2f} seconds")
+                        self.recording = False
+                        self.save_to_csv()
+                    else:
+                        print("Please start recording first.")
         except Exception as e:
             self.get_logger().info(f"Keyboard listener stopped: {str(e)}")
     
