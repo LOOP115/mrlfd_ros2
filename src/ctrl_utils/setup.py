@@ -23,6 +23,7 @@ setup(
             "joints_publisher = ctrl_utils.joints_publisher:main",
             "move_to_start_server = ctrl_utils.move_to_start_server:main",
             "gripper_server = ctrl_utils.gripper_server:main",
+            "data_recorder = ctrl_utils.data_recorder:main",
         ],
     },
 )
