@@ -93,3 +93,8 @@ ros2 launch ctrl_bringup all_nodes.launch.py
 ros2 launch franka_moveit_config moveit.launch.py robot_ip:=<robot_ip>
 ```
 
+<br>
+
+## License
+
+This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENSE) file for details.
