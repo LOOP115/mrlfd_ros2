@@ -113,7 +113,11 @@ class DataRecorder(Node):
                 else:
                     print("Please re-enter the details.")
             else:
-                return {'directory': directory, 'filename': filename}
+                confirm = input(f"Recording will be saved to '{filename}'. Confirm? [y/n]: ").lower()
+                if confirm == 'y':
+                    return {'directory': directory, 'filename': filename}
+                else:
+                    print("Please re-enter the details.")
 
 
     def save_to_csv(self):
