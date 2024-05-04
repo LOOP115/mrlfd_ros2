@@ -4,8 +4,8 @@
   <name>real_ctrl</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="54584749+LOOP115@users.noreply.github.com">jiahao</maintainer>
-  <license>TODO: License declaration</license>
+  <maintainer email="loopc30@gmail.com">jiahao</maintainer>
+  <license>Apache 2.0</license>
 
   <depend>geometry_msgs</depend>
   <depend>moveit_ros_planning_interface</depend>

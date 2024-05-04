@@ -4,8 +4,8 @@
   <name>ctrl_bringup</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="54584749+LOOP115@users.noreply.github.com">jiahao</maintainer>
-  <license>TODO: License declaration</license>
+  <maintainer email="loopc30@gmail.com">jiahao</maintainer>
+  <license>Apache 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
