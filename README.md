@@ -59,6 +59,12 @@ hostname -I
 ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=<ros_ip>
 ```
 
+- Start data recorder, remember to modify the recording details
+
+```bash
+ros2 run ctrl_utils data_recorder
+```
+
 ### Kinesthetic Teaching
 
 - First, launch nodes for visualizations
