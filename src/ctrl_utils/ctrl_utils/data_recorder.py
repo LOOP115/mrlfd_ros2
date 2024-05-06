@@ -45,7 +45,7 @@ class DataRecorder(Node):
     def keyboard_listener(self):
         try:
             while True:
-                key = input("Press 'r' to start/stop recording, 'q' to quit: ")
+                key = input("Press 'r' to start recording, 'q' to stop: ")
                 if key == 'r':
                     if not self.recording:
                         self.recording_details = self.get_recording_details()
@@ -109,13 +109,13 @@ class DataRecorder(Node):
 
             # Check if file exists and ask user if they want to overwrite
             if os.path.exists(full_path):
-                overwrite = input(f"The file '{filename}' already exists. Do you want to overwrite it? [y/n]: ").lower()
+                overwrite = input(f"The file '{filename}' already exists in {approach_str}. Do you want to overwrite it? [y/n]: ").lower()
                 if overwrite == 'y':
                     return {'directory': directory, 'filename': filename}
                 else:
                     print("Please re-enter the details.")
             else:
-                confirm = input(f"Recording will be saved to '{filename}'. Confirm? [y/n]: ").lower()
+                confirm = input(f"Recording will be saved to '{approach_str}/{filename}'. Confirm? [y/n]: ").lower()
                 if confirm == 'y':
                     return {'directory': directory, 'filename': filename}
                 else:
