@@ -1,6 +1,6 @@
-# XRFranka ROS2
+# Mr.LfD ROS2
 
-This is the ROS2 endpoint for [XRFranka](https://github.com/LOOP115/Franka_XR_Hub), which enables launching of ROS2 programs to control Franka in Gazebo or the real world.
+This is the ROS2 endpoint for [Mr.LfD](https://github.com/LOOP115/MrLfD_Hub), which enables launching of ROS2 programs to control Franka in Gazebo or the real world.
 
 <br>
 
@@ -10,17 +10,17 @@ This is the ROS2 endpoint for [XRFranka](https://github.com/LOOP115/Franka_XR_Hu
 
 Before using this repository. please make sure you have setup the following dependencies:
 
-- [franka_ros2](https://github.com/LOOP115/Franka_XR_Hub/blob/main/docs/franka/franka_ros2.md)
-- [Gazebo](https://github.com/LOOP115/Franka_XR_Hub/blob/main/docs/franka/gazebo.md)
+- [franka_ros2](https://github.com/LOOP115/MrLfD_Hub/blob/main/docs/franka/franka_ros2.md)
+- [Gazebo](https://github.com/LOOP115/MrLfD_Hub/blob/main/docs/franka/gazebo.md)
 
 ### Building
 
 ```bash
 # Clone the repo to anywhere you like, the repo itself is a ROS2 workspace
-git clone https://github.com/LOOP115/xrfranka_ros2
+git clone https://github.com/LOOP115/mrlfd_ros2
 
 # Build
-cd xrfranka_ros2
+cd mrlfd_ros2
 colcon build
 ```
 
@@ -39,7 +39,7 @@ gedit ~/.bashrc
 ```
 
 ```bash
-source ~/project/xrfranka_ros2/install/setup.bash
+source ~/project/mrlfd_ros2/install/setup.bash
 ```
 
 <br>
