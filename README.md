@@ -1,4 +1,4 @@
-# Mr.LfD ROS2
+# Mr.LfD - ROS 2
 
 This is the ROS2 endpoint for [Mr.LfD](https://github.com/LOOP115/MrLfD_Hub), which enables launching of ROS2 programs to control Franka in Gazebo or the real world.
 
